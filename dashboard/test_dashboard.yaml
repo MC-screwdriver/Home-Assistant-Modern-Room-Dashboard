@@ -1,0 +1,102 @@
+title: Modern Room Dashboard – Test
+views:
+  - title: Wohnzimmer
+    path: wohnzimmer
+    icon: mdi:sofa
+    type: sections
+    max_columns: 4
+    sections:
+      - type: grid
+        column_span: 1
+        cards:
+          - type: custom:mushroom-title-card
+            title: Wohnzimmer
+            subtitle: Baustein 01 · Raumklima
+          - type: custom:mushroom-template-card
+            entity: sensor.livingroom_temperature
+            primary: Raumklima
+            secondary: >-
+              {% set temp = states('sensor.livingroom_temperature') | float(none) %}
+              {% set humidity = states('sensor.livingroom_humidity') | float(none) %}
+              {% if temp is none or humidity is none %}
+                Keine vollständigen Klimadaten
+              {% elif 20 <= temp <= 24 and 40 <= humidity <= 60 %}
+                {{ temp | round(1) | string | replace('.', ',') }} °C  ·  {{ humidity | round(0) }} %
+                Optimal
+              {% elif 18 <= temp <= 26 and 30 <= humidity <= 70 %}
+                {{ temp | round(1) | string | replace('.', ',') }} °C  ·  {{ humidity | round(0) }} %
+                Bitte beobachten
+              {% else %}
+                {{ temp | round(1) | string | replace('.', ',') }} °C  ·  {{ humidity | round(0) }} %
+                Handlungsbedarf
+              {% endif %}
+            icon: mdi:thermometer
+            icon_color: >-
+              {% set temp = states('sensor.livingroom_temperature') | float(none) %}
+              {% set humidity = states('sensor.livingroom_humidity') | float(none) %}
+              {% if temp is none or humidity is none %}
+                disabled
+              {% elif 20 <= temp <= 24 and 40 <= humidity <= 60 %}
+                green
+              {% elif 18 <= temp <= 26 and 30 <= humidity <= 70 %}
+                amber
+              {% else %}
+                red
+              {% endif %}
+            badge_icon: >-
+              {% set temp = states('sensor.livingroom_temperature') | float(none) %}
+              {% set humidity = states('sensor.livingroom_humidity') | float(none) %}
+              {% if temp is none or humidity is none %}
+                mdi:help
+              {% elif 20 <= temp <= 24 and 40 <= humidity <= 60 %}
+                mdi:leaf
+              {% elif 18 <= temp <= 26 and 30 <= humidity <= 70 %}
+                mdi:alert-outline
+              {% else %}
+                mdi:alert
+              {% endif %}
+            badge_color: >-
+              {% set temp = states('sensor.livingroom_temperature') | float(none) %}
+              {% set humidity = states('sensor.livingroom_humidity') | float(none) %}
+              {% if temp is none or humidity is none %}
+                disabled
+              {% elif 20 <= temp <= 24 and 40 <= humidity <= 60 %}
+                green
+              {% elif 18 <= temp <= 26 and 30 <= humidity <= 70 %}
+                amber
+              {% else %}
+                red
+              {% endif %}
+            multiline_secondary: true
+            fill_container: true
+            layout: horizontal
+            tap_action:
+              action: more-info
+            hold_action:
+              action: none
+            double_tap_action:
+              action: none
+            card_mod:
+              style: |
+                ha-card {
+                  min-height: 148px;
+                  padding: 14px;
+                  border-radius: 18px;
+                  border: 1px solid rgba(var(--rgb-primary-text-color), 0.10);
+                  box-shadow: none;
+                  background: rgba(var(--rgb-card-background-color), 0.88);
+                }
+                mushroom-shape-icon {
+                  --icon-size: 50px;
+                }
+                .primary {
+                  font-size: 14px !important;
+                  font-weight: 600 !important;
+                  letter-spacing: 0.01em;
+                }
+                .secondary {
+                  margin-top: 8px !important;
+                  font-size: 18px !important;
+                  line-height: 1.55 !important;
+                  font-weight: 500 !important;
+                }
